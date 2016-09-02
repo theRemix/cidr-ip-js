@@ -52,6 +52,29 @@ const data = {
 const get = addr => addr.split('/').reduce((node, part) => node ? node[part] : null, data);
 
 
+/*
+ * _G is the graph
+ * v are vertices
+ * return list of subnets
+ */
+const subnets = (path, _G) => {
+  _G = _G || data;
+
+  return Object.keys( _G )
+    .reduce(( list, v ) => {
+      let curPath = path ? path + '/' + v : v;
+      if( _G[v]._isDir ){
+        return subnets( curPath, _G[v] ).concat(list);
+      } else if( v !== '_isDir' && curPath.split('/').length === 5 ){ // cidr
+        list.push({ path : curPath, node : _G[v] });
+      }
+      return list;
+
+    }, []);
+};
+
 module.exports = {
-  get
+  data,
+  get,
+  subnets
 };

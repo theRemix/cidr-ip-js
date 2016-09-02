@@ -1,7 +1,7 @@
 const test = require('tape');
 const ds = require('../ds');
 
-test('Faux Datastore', it => {
+test('Faux Datastore .get()', it => {
 
   const testCidrPath1 = '10/1/0/0/16';
   it.test(`get(${testCidrPath1})`, (should)=> {
@@ -38,5 +38,23 @@ test('Faux Datastore', it => {
     should.end();
 
   });
+
+});
+
+test('Faux Datastore .subnets()', should => {
+
+  const allSubnets = [
+    { path: '10/1/0/0/16', node: ds.data[10][1][0][0][16] },
+    { path: '10/2/0/0/16', node: ds.data[10][2][0][0][16] },
+    { path: '10/2/1/0/24', node: ds.data[10][2][1][0][24] },
+    { path: '10/2/2/0/24', node: ds.data[10][2][2][0][24] }
+  ];
+
+  const actual = ds.subnets();
+  should.ok(actual.every( subnet => allSubnets.some( expected => expected.path === subnet.path && expected.node === subnet.node ) ),
+           'subnets() should have only 4 reserved subnets');
+  should.ok(allSubnets.every( subnet => actual.some( expected => expected.path === subnet.path && expected.node === subnet.node ) ),
+           'subnets() should have only 4 reserved subnets');
+  should.end();
 
 });
