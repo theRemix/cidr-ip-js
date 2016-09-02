@@ -73,8 +73,31 @@ const subnets = (path, _G) => {
     }, []);
 };
 
+/*
+ * _G is the graph
+ * v are vertices
+ * return list of ips
+ */
+const ips = (path, _G) => {
+  _G = _G || data;
+
+  return Object.keys( _G )
+    .reduce(( list, v ) => {
+      let curPath = path ? path + '/' + v : v;
+      let depth = curPath.split('/').length;
+      if( depth < 4 && _G[v]._isDir ){
+        return ips( curPath, _G[v] ).concat(list);
+      } else if( v !== '_isDir' && !_G[v]._isDir && depth === 4 ){ // ip
+        list.push({ path : curPath, node : _G[v] });
+      }
+      return list;
+
+    }, []);
+};
+
 module.exports = {
   data,
   get,
-  subnets
+  subnets,
+  ips
 };

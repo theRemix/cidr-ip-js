@@ -1,5 +1,5 @@
 const ds = require('./ds');
 
-let checkSubnets = ds.subnets();
+console.log('subnets', ds.subnets());
 
-console.log(checkSubnets);
+console.log('ips', ds.ips());

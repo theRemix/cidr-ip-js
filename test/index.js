@@ -58,3 +58,21 @@ test('Faux Datastore .subnets()', should => {
   should.end();
 
 });
+
+test('Faux Datastore .ips()', should => {
+
+  const allIps = [
+    { path: '10/2/2/3', node: ds.data[10][2][2][3] },
+    { path: '10/2/2/4', node: ds.data[10][2][2][4] },
+    { path: '10/1/0/34', node: ds.data[10][1][0][34] }
+  ];
+
+  const actual = ds.ips();
+  should.ok(actual.every( ip => allIps.some( expected => expected.path === ip.path && expected.node === ip.node ) ),
+           'ips() should have only 3 reserved ips');
+  should.ok(allIps.every( ip => actual.some( expected => expected.path === ip.path && expected.node === ip.node ) ),
+           'ips() should have only 3 reserved ips');
+  should.end();
+
+});
+
